@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LengendArt offers curated, timeless furniture for modern living spaces. Explore our collection of bedroom, living, and dining interiors.">
+    <title>LengendArt | Timeless Interiors</title>
+    
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Icons -->
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    colors: {
+                        LengendArt: {
+                            bg: '#e0dcd3',
+                            dark: '#0f0f0f', 
+                            teal: '#1B3C3D',
+                            accent: '#A85A3F',
+                            light: '#F5F5F0',
+                            border: 'rgba(28, 28, 28, 0.1)'
+                        }
+                    },
+                    fontSize: {
+                        '7xl': '5rem',
+                        '8xl': '6rem',
+                    },
+                    animation: {
+                        'scroll': 'scroll 60s linear infinite',
+                        'scroll-slow': 'scroll 80s linear infinite',
+                        'beam': 'beam 2s linear infinite',
+                        'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+                        'slide-down-char': 'slideDownChar 0.8s cubic-bezier(0.5, 0, 0.2, 1) both',
+                        'clip-reveal': 'clipReveal 1.5s cubic-bezier(0.77, 0, 0.175, 1) both',
+                        'border-beam': 'borderBeam 4s linear infinite',
+                    },
+                    keyframes: {
+                        scroll: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        beam: {
+                            '0%': { offsetDistance: '0%' },
+                            '100%': { offsetDistance: '100%' }
+                        },
+                        slideDownChar: {
+                            '0%': { transform: 'translateY(-110%)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        clipReveal: {
+                            '0%': { clipPath: 'inset(100% 0 0 0)', transform: 'translateY(20px)' },
+                            '100%': { clipPath: 'inset(0 0 0 0)', transform: 'translateY(0)' }
+                        },
+                        borderBeam: {
+                            '100%': { offsetDistance: '100%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Reveal Animation Classes */
+        .reveal-element {
+            opacity: 0.01;
+            filter: blur(10px);
+            transform: translateY(30px);
+            transition: opacity 1s ease, filter 1s ease, transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .reveal-element.in-view {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0);
+        }
+
+        /* Text Character Animation */
+        .char-reveal span {
+            display: inline-block;
+            opacity: 0.01; 
+            transform: translateY(-100%);
+            clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .char-reveal.active span {
+            opacity: 1;
+            transform: translateY(0);
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        /* Marquee Mask */
+        .marquee-mask {
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        /* Gallery Hover Pausing */
+        .gallery-track:hover {
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+<body class="bg-LengendArt-bg text-LengendArt-dark antialiased font-sans selection:bg-LengendArt-teal selection:text-white overflow-x-hidden">
+
+    <!-- Fixed Vertical Grid Lines -->
+    <div class="fixed inset-0 pointer-events-none z-0 max-w-[1800px] mx-auto px-6 grid grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-4 opacity-20">
+        <div class="border-l border-LengendArt-dark h-full"></div>
+        <div class="border-l border-LengendArt-dark h-full hidden md:block"></div>
+        <div class="border-l border-LengendArt-dark h-full hidden lg:block"></div>
+        <div class="border-l border-LengendArt-dark h-full"></div>
+        <div class="border-l border-LengendArt-dark h-full hidden md:block"></div>
+        <div class="border-l border-LengendArt-dark h-full hidden lg:block"></div>
+        <div class="border-l border-LengendArt-dark h-full"></div>
+        <div class="border-l border-LengendArt-dark h-full hidden md:block"></div>
+        <div class="border-l border-LengendArt-dark h-full hidden lg:block"></div>
+        <div class="border-l border-LengendArt-dark h-full"></div>
+        <div class="border-l border-LengendArt-dark h-full hidden md:block"></div>
+        <div class="border-r border-l border-LengendArt-dark h-full"></div>
+    </div>
+
+    <!-- Navigation -->
+    <header class="fixed top-0 w-full z-50 bg-LengendArt-bg/90 backdrop-blur-xl border-b border-LengendArt-dark/5 transition-all duration-300">
+        <div class="max-w-[1800px] mx-auto px-6 h-24 flex items-center justify-between">
+            <a href="#" class="relative group z-10">
+                <span class="font-sans font-bold tracking-[0.25em] text-2xl text-LengendArt-dark group-hover:opacity-70 transition-opacity">
+                    LengendArt
+                </span>
+            </a>
+            
+            <nav class="hidden lg:flex items-center gap-10 text-base font-semibold text-LengendArt-dark/70">
+                <a href="#" class="hover:text-LengendArt-dark transition-colors">Living</a>
+                <a href="#" class="hover:text-LengendArt-dark transition-colors">Dining</a>
+                <a href="#" class="hover:text-LengendArt-dark transition-colors">Bedroom</a>
+                <a href="#" class="hover:text-LengendArt-dark transition-colors">Lighting</a>
+            </nav>
+
+            <!-- <button id="mobile-menu-btn"
+                    class="lg:hidden flex items-center justify-center w-12 h-12 rounded-full border border-LengendArt-dark/10 hover:bg-LengendArt-dark/5 transition"
+                    aria-label="Open Menu">
+                <span class="iconify" data-icon="solar:hamburger-menu-linear" data-width="26"></span>
+            </button>
+
+       
+            <div id="mobile-menu"
+                class="fixed inset-0 z-[60] hidden flex-col bg-LengendArt-bg/80 backdrop-blur-xl">
+
+
+                <div class="flex items-center justify-between px-6 h-24 border-b border-LengendArt-dark/10">
+                    <span class="font-sans font-bold tracking-[0.25em] text-2xl">
+                        LengendArt
+                    </span>
+
+                    <button id="mobile-menu-close"
+                            class="w-12 h-12 flex items-center justify-center rounded-full border border-LengendArt-dark/10 hover:bg-LengendArt-dark/5 transition"
+                            aria-label="Close Menu">
+                        <span class="iconify" data-icon="solar:close-linear" data-width="26"></span>
+                    </button>
+                </div>
+
+                <nav class="flex-1 flex flex-col justify-center px-8 gap-8 text-3xl font-serif">
+                    <a href="#" class="mobile-link hover:opacity-60 transition">Living</a>
+                    <a href="#" class="mobile-link hover:opacity-60 transition">Dining</a>
+                    <a href="#" class="mobile-link hover:opacity-60 transition">Bedroom</a>
+                    <a href="#" class="mobile-link hover:opacity-60 transition">Lighting</a>
+                </nav>
+
+                <div class="px-8 pb-10">
+                    <button class="mobile-link w-full py-5 rounded-full bg-LengendArt-dark text-white font-bold tracking-widest uppercase">
+                        Shop Collection
+                    </button>
+                </div>
+            </div>
+
+            <script>
+                const mobileMenu = document.getElementById('mobile-menu');
+                const openBtn = document.getElementById('mobile-menu-btn');
+                const closeBtn = document.getElementById('mobile-menu-close');
+                const menuLinks = document.querySelectorAll('.mobile-link');
+
+                function openMenu() {
+                    mobileMenu.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function closeMenu() {
+                    mobileMenu.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }
+
+                openBtn.addEventListener('click', openMenu);
+                closeBtn.addEventListener('click', closeMenu);
+
+                // Close menu when ANY link or CTA is clicked
+                menuLinks.forEach(link => {
+                    link.addEventListener('click', closeMenu);
+                });
+            </script> -->
+
+
+
+
+
+            <div class="flex items-center gap-6">
+                <button class="hover:opacity-60 transition-opacity" aria-label="Search"><span class="iconify" data-icon="solar:magnifer-linear" data-width="24"></span></button>
+                <button class="hover:opacity-60 transition-opacity hidden sm:block" aria-label="Account"><span class="iconify" data-icon="solar:user-linear" data-width="24"></span></button>
+                <button class="hover:opacity-60 transition-opacity relative" aria-label="Cart">
+                    <span class="iconify" data-icon="solar:bag-3-linear" data-width="24"></span>
+                    <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-LengendArt-accent rounded-full animate-pulse"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-[110vh] flex items-center pt-20 overflow-hidden" id="hero">
+        <div class="absolute inset-0 z-0 will-change-transform" id="parallax-bg">
+            <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?q=80&w=2700&auto=format&fit=crop" 
+                 alt="Modern Living Room with minimalist furniture" 
+                 class="w-full h-[120%] object-cover object-center opacity-90 brightness-[0.9]">
+            <div class="absolute inset-0 bg-gradient-to-b from-LengendArt-bg/40 via-transparent to-LengendArt-bg/90"></div>
+        </div>
+
+        <div class="relative z-10 w-full max-w-[1800px] mx-auto px-6 mt-10 md:mt-0">
+            <div class="max-w-5xl">
+                <h1 class="char-reveal font-serif text-6xl md:text-8xl lg:text-[7rem] leading-[0.9] tracking-tight text-LengendArt-dark mix-blend-multiply mb-10">
+                    <span class="block overflow-hidden pb-2" data-text="Curated"></span>
+                    <span class="block overflow-hidden pb-2" data-text="Sanctuary"></span>
+                    <span class="block overflow-hidden pb-2 pl-12 md:pl-24 italic font-light" data-text="For_Living"></span>
+                </h1>
+                
+                <p class="reveal-element text-lg md:text-2xl font-medium text-LengendArt-dark/80 max-w-2xl mb-12 leading-relaxed ml-2">
+                    Discover furniture designed with intention. Where modern minimalism meets industrial warmth to create spaces that breathe.
+                </p>
+
+                <div class="reveal-element flex flex-col sm:flex-row gap-6 items-start">
+                    <button class="group relative px-10 py-5 rounded-full bg-LengendArt-dark text-white overflow-hidden transition-transform hover:scale-105">
+                        <span class="relative z-10 text-sm font-bold tracking-widest uppercase flex items-center gap-2">
+                            Shop Collection <span class="iconify group-hover:translate-x-1 transition-transform" data-icon="solar:arrow-right-linear"></span>
+                        </span>
+                        <div class="absolute inset-0 rounded-full p-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent w-[50%] h-full blur-md animate-[spin_2s_linear_infinite]" style="transform-origin: center;"></div>
+                        </div>
+                    </button>
+
+                    <button class="px-10 py-5 rounded-full border border-LengendArt-dark/20 bg-white/10 backdrop-blur-sm text-LengendArt-dark hover:bg-white/30 transition-all">
+                        <span class="text-sm font-bold tracking-widest uppercase">View Lookbook</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-6 animate-bounce">
+             <span class="iconify text-LengendArt-dark/50" data-icon="solar:arrow-down-linear" data-width="32"></span>
+        </div>
+    </section>
+
+    <!-- Marquee Section -->
+    <section class="py-24 border-y border-LengendArt-dark/10 bg-LengendArt-bg overflow-hidden relative" id="pricing">
+        <div class="absolute inset-0 marquee-mask pointer-events-none z-10"></div>
+        <div class="flex gap-16 animate-scroll w-max hover:[animation-play-state:paused]">
+            <div class="flex gap-16 items-center opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+                <span class="text-6xl font-serif italic">Herman Miller</span>
+                <span class="text-6xl font-sans font-bold stroke-text text-transparent" style="-webkit-text-stroke: 1px #333;">VITRA</span>
+                <span class="text-6xl font-serif italic">Knoll</span>
+                <span class="text-6xl font-sans font-bold stroke-text text-transparent" style="-webkit-text-stroke: 1px #333;">HAY</span>
+                <span class="text-6xl font-serif italic">Muuto</span>
+                <span class="text-6xl font-sans font-bold stroke-text text-transparent" style="-webkit-text-stroke: 1px #333;">MENU</span>
+                <span class="text-6xl font-serif italic">Gubi</span>
+                <span class="text-6xl font-serif italic">Herman Miller</span>
+                <span class="text-6xl font-sans font-bold stroke-text text-transparent" style="-webkit-text-stroke: 1px #333;">VITRA</span>
+                <span class="text-6xl font-serif italic">Knoll</span>
+                <span class="text-6xl font-sans font-bold stroke-text text-transparent" style="-webkit-text-stroke: 1px #333;">HAY</span>
+                <span class="text-6xl font-serif italic">Muuto</span>
+                <span class="text-6xl font-sans font-bold stroke-text text-transparent" style="-webkit-text-stroke: 1px #333;">MENU</span>
+                <span class="text-6xl font-serif italic">Gubi</span>
+            </div>
+             <div class="flex gap-16 items-center opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+                <span class="text-6xl font-serif italic">Herman Miller</span>
+                <span class="text-6xl font-sans font-bold stroke-text text-transparent" style="-webkit-text-stroke: 1px #333;">VITRA</span>
+                <span class="text-6xl font-serif italic">Knoll</span>
+                <span class="text-6xl font-sans font-bold stroke-text text-transparent" style="-webkit-text-stroke: 1px #333;">HAY</span>
+                <span class="text-6xl font-serif italic">Muuto</span>
+                <span class="text-6xl font-sans font-bold stroke-text text-transparent" style="-webkit-text-stroke: 1px #333;">MENU</span>
+                <span class="text-6xl font-serif italic">Gubi</span>
+                 <span class="text-6xl font-serif italic">Herman Miller</span>
+                <span class="text-6xl font-sans font-bold stroke-text text-transparent" style="-webkit-text-stroke: 1px #333;">VITRA</span>
+                <span class="text-6xl font-serif italic">Knoll</span>
+                <span class="text-6xl font-sans font-bold stroke-text text-transparent" style="-webkit-text-stroke: 1px #333;">HAY</span>
+                <span class="text-6xl font-serif italic">Muuto</span>
+                <span class="text-6xl font-sans font-bold stroke-text text-transparent" style="-webkit-text-stroke: 1px #333;">MENU</span>
+                <span class="text-6xl font-serif italic">Gubi</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Section -->
+    <section class="py-32 relative overflow-hidden" id="feature">
+        <div class="max-w-[1800px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            
+            <div class="order-2 lg:order-1 relative">
+                 <div class="reveal-element">
+                    <span class="inline-block border border-LengendArt-dark/30 rounded-full px-4 py-1.5 text-xs font-bold tracking-widest uppercase mb-6 bg-white/50 backdrop-blur-md">
+                        Craftsmanship
+                    </span>
+                    <h2 class="text-5xl md:text-7xl font-serif text-LengendArt-dark leading-[1] mb-8">
+                        Designed for <br><span class="italic text-LengendArt-accent">Life's Moments</span>
+                    </h2>
+                    <p class="text-xl text-LengendArt-dark/70 mb-10 max-w-lg leading-relaxed">
+                        Every curve, stitch, and joint is considered. We obsess over the details so you can focus on living. Sustainable materials meet ergonomic perfection.
+                    </p>
+                    
+                    <ul class="space-y-6 mb-10">
+                        <li class="flex items-center gap-4 text-lg font-medium">
+                            <span class="w-10 h-10 rounded-full bg-LengendArt-dark text-white flex items-center justify-center shrink-0">
+                                <span class="iconify" data-icon="solar:leaf-linear" data-width="20"></span>
+                            </span>
+                            100% Recycled Fabric Options
+                        </li>
+                        <li class="flex items-center gap-4 text-lg font-medium">
+                            <span class="w-10 h-10 rounded-full bg-LengendArt-dark text-white flex items-center justify-center shrink-0">
+                                <span class="iconify" data-icon="solar:medal-ribbon-linear" data-width="20"></span>
+                            </span>
+                            10-Year Structural Warranty
+                        </li>
+                        <li class="flex items-center gap-4 text-lg font-medium">
+                            <span class="w-10 h-10 rounded-full bg-LengendArt-dark text-white flex items-center justify-center shrink-0">
+                                <span class="iconify" data-icon="solar:sofa-linear" data-width="20"></span>
+                            </span>
+                            Modular Configurations
+                        </li>
+                    </ul>
+                 </div>
+            </div>
+
+            <div class="order-1 lg:order-2 relative h-[600px] flex items-center justify-center reveal-element delay-200">
+                <div class="relative z-10 w-[300px] md:w-[400px]">
+                    <img src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/0f714889-a92e-4f96-9324-e5eca4acbbfe_800w.jpg" 
+                         alt="Featured Chair" 
+                         class="w-full h-auto drop-shadow-2xl hover:scale-105 transition-transform duration-700">
+                    
+                    <div class="absolute top-[20%] right-[10%]">
+                        <span class="absolute inline-flex h-full w-full rounded-full bg-LengendArt-accent opacity-75 animate-ping-slow"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-LengendArt-accent border-2 border-white"></span>
+                    </div>
+                </div>
+
+                <svg class="absolute inset-0 w-full h-full pointer-events-none z-0 hidden md:block" style="stroke-linecap: round; stroke-linejoin: round;">
+                    <path id="path1" d="M 550 150 C 500 150, 450 200, 400 250" stroke="rgba(28,28,28,0.2)" stroke-width="1" fill="none"/>
+                    <circle r="3" fill="#A85A3F">
+                        <animateMotion dur="3s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+                            <mpath href="#path1"/>
+                        </animateMotion>
+                    </circle>
+                     <foreignObject x="560" y="130" width="150" height="50">
+                        <div xmlns="http://www.w3.org/1999/xhtml" class="text-xs font-bold uppercase tracking-widest text-LengendArt-dark bg-white/80 backdrop-blur px-3 py-1 rounded-sm border border-LengendArt-dark/10">Premium Velvet</div>
+                     </foreignObject>
+
+                    <path id="path2" d="M 100 450 C 150 450, 250 400, 300 350" stroke="rgba(28,28,28,0.2)" stroke-width="1" fill="none"/>
+                    <circle r="3" fill="#A85A3F">
+                        <animateMotion dur="4s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" calcMode="linear">
+                            <mpath href="#path2"/>
+                        </animateMotion>
+                    </circle>
+                    <foreignObject x="10" y="440" width="150" height="50">
+                        <div xmlns="http://www.w3.org/1999/xhtml" class="text-xs font-bold uppercase tracking-widest text-LengendArt-dark bg-white/80 backdrop-blur px-3 py-1 rounded-sm border border-LengendArt-dark/10">Ash Wood Base</div>
+                     </foreignObject>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonial Section -->
+    <section class="py-32 bg-LengendArt-light border-y border-LengendArt-dark/5" id="testimonial">
+        <div class="max-w-[1800px] mx-auto px-6 flex flex-col items-center">
+            <h2 class="text-5xl md:text-7xl font-serif text-center mb-20 reveal-element">
+                Stories from <span class="italic">Home</span>
+            </h2>
+
+            <div class="relative w-full max-w-4xl h-[500px] flex items-center justify-center perspective-1000">
+                <button id="prev-card" class="absolute left-0 md:-left-20 z-50 p-4 rounded-full border border-LengendArt-dark/10 hover:bg-LengendArt-dark hover:text-white transition-all backdrop-blur-sm">
+                    <span class="iconify" data-icon="solar:arrow-left-linear" data-width="24"></span>
+                </button>
+                <button id="next-card" class="absolute right-0 md:-right-20 z-50 p-4 rounded-full border border-LengendArt-dark/10 hover:bg-LengendArt-dark hover:text-white transition-all backdrop-blur-sm">
+                    <span class="iconify" data-icon="solar:arrow-right-linear" data-width="24"></span>
+                </button>
+
+                <div class="relative w-full md:w-[600px] h-[400px]" id="cards-container">
+                    <!-- Card 1 -->
+                    <div class="testimonial-card flashlight-card absolute inset-0 bg-[#e0dcd3] border border-stone-300/50 rounded-2xl p-10 shadow-2xl flex flex-col justify-between transition-all duration-700 ease-out origin-bottom" style="z-index: 3; transform: translateY(0) scale(1);">
+                         <div class="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100 overlay-light" style="background: radial-gradient(600px circle at var(--x) var(--y), rgba(255,255,255,0.6), transparent 40%); mix-blend-mode: overlay;"></div>
+                         <div class="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100 border-light" style="background: radial-gradient(600px circle at var(--x) var(--y), rgba(168, 90, 63, 0.4), transparent 40%); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; padding: 1px;"></div>
+                        
+                        <div class="relative z-10">
+                            <div class="flex gap-1 mb-6 text-LengendArt-accent">
+                                <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                                <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                                <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                                <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                                <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                            </div>
+                            <p class="text-2xl font-serif leading-relaxed">"The modular sofa completely transformed our living space. It's rare to find such a perfect balance between architectural rigor and absolute comfort."</p>
+                        </div>
+                        <div class="relative z-10 flex items-center gap-4">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&h=100" class="w-12 h-12 rounded-full grayscale object-cover" alt="Sarah Jenkins">
+                            <div>
+                                <h4 class="font-bold text-sm uppercase tracking-widest">Sarah Jenkins</h4>
+                                <p class="text-xs text-LengendArt-dark/50">Interior Designer, NY</p>
+                            </div>
+                        </div>
+                    </div>
+
+                     <!-- Card 2 -->
+                     <div class="testimonial-card flashlight-card absolute inset-0 bg-[#e0dcd3] border border-stone-300/50 rounded-2xl p-10 shadow-xl flex flex-col justify-between transition-all duration-700 ease-out origin-bottom" style="z-index: 2; transform: translateY(20px) scale(0.95); opacity: 0.8;">
+                        <div class="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100 overlay-light" style="background: radial-gradient(600px circle at var(--x) var(--y), rgba(255,255,255,0.6), transparent 40%); mix-blend-mode: overlay;"></div>
+                        <div class="relative z-10">
+                           <div class="flex gap-1 mb-6 text-LengendArt-accent">
+                               <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                               <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                               <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                               <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                               <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                           </div>
+                           <p class="text-2xl font-serif leading-relaxed">"Exceptional quality. The wood finish on the dining table is simply exquisite. Delivery was seamless and professional."</p>
+                       </div>
+                       <div class="relative z-10 flex items-center gap-4">
+                           <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&h=100" class="w-12 h-12 rounded-full grayscale object-cover" alt="Marc Dubois">
+                           <div>
+                               <h4 class="font-bold text-sm uppercase tracking-widest">Marc Dubois</h4>
+                               <p class="text-xs text-LengendArt-dark/50">Architect, Montreal</p>
+                           </div>
+                       </div>
+                   </div>
+
+                    <!-- Card 3 -->
+                    <div class="testimonial-card flashlight-card absolute inset-0 bg-[#e0dcd3] border border-stone-300/50 rounded-2xl p-10 shadow-lg flex flex-col justify-between transition-all duration-700 ease-out origin-bottom" style="z-index: 1; transform: translateY(40px) scale(0.9); opacity: 0.6;">
+                        <div class="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition duration-300 group-hover:opacity-100 overlay-light" style="background: radial-gradient(600px circle at var(--x) var(--y), rgba(255,255,255,0.6), transparent 40%); mix-blend-mode: overlay;"></div>
+                        <div class="relative z-10">
+                           <div class="flex gap-1 mb-6 text-LengendArt-accent">
+                               <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                               <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                               <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                               <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                               <span class="iconify" data-icon="solar:star-bold" data-width="20"></span>
+                           </div>
+                           <p class="text-2xl font-serif leading-relaxed">"LengendArt captures the essence of modern living. The lighting fixtures added just the right amount of drama to my studio."</p>
+                       </div>
+                       <div class="relative z-10 flex items-center gap-4">
+                           <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&h=100" class="w-12 h-12 rounded-full grayscale object-cover" alt="Elena R.">
+                           <div>
+                               <h4 class="font-bold text-sm uppercase tracking-widest">Elena R.</h4>
+                               <p class="text-xs text-LengendArt-dark/50">Artist, Toronto</p>
+                           </div>
+                       </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section (New) -->
+    <section class="py-24 border-t border-LengendArt-dark/10 bg-LengendArt-bg relative overflow-hidden" id="gallery">
+        <div class="max-w-[1800px] mx-auto px-6 mb-16 flex justify-between items-end reveal-element">
+            <div>
+                <span class="block font-sans text-xs font-bold tracking-widest uppercase mb-4 text-LengendArt-accent">The Collection</span>
+                <h2 class="text-4xl md:text-6xl font-serif text-LengendArt-dark">Curated <span class="italic">Spaces</span></h2>
+            </div>
+            <a href="#" class="hidden md:flex items-center gap-2 text-sm font-bold tracking-widest uppercase hover:opacity-60 transition-opacity">
+                View All <span class="iconify" data-icon="solar:arrow-right-linear"></span>
+            </a>
+        </div>
+
+        <div class="relative w-full overflow-hidden">
+            <!-- Left/Right Fade Masks -->
+            <div class="absolute inset-y-0 left-0 w-20 md:w-40 bg-gradient-to-r from-LengendArt-bg to-transparent z-10 pointer-events-none"></div>
+            <div class="absolute inset-y-0 right-0 w-20 md:w-40 bg-gradient-to-l from-LengendArt-bg to-transparent z-10 pointer-events-none"></div>
+
+            <!-- Timed Scroll Track -->
+            <div class="flex gap-8 gallery-track animate-scroll-slow w-max cursor-grab active:cursor-grabbing pl-6">
+                
+                <!-- Gallery Item 1: Bedroom -->
+                <figure class="relative group w-[300px] md:w-[400px] h-[500px] flex-shrink-0 overflow-hidden rounded-sm bg-stone-200">
+                    <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=800&auto=format&fit=crop" 
+                         alt="Minimalist beige bedroom with oak bed frame and linen bedding" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    <figcaption class="absolute bottom-0 left-0 w-full p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                        <span class="block text-xs font-bold text-white/80 uppercase tracking-widest mb-1">Bedroom</span>
+                        <span class="block text-2xl font-serif text-white italic">The Japandi Bed</span>
+                    </figcaption>
+                </figure>
+
+                <!-- Gallery Item 2: Living -->
+                <figure class="relative group w-[300px] md:w-[400px] h-[500px] flex-shrink-0 overflow-hidden rounded-sm bg-stone-200">
+                    <img src="https://images.unsplash.com/photo-1567016432779-094069958ea5?q=80&w=800&auto=format&fit=crop" 
+                         alt="Modern living room featuring a grey modular sofa and concrete coffee table" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    <figcaption class="absolute bottom-0 left-0 w-full p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                        <span class="block text-xs font-bold text-white/80 uppercase tracking-widest mb-1">Living</span>
+                        <span class="block text-2xl font-serif text-white italic">Cloud Modular</span>
+                    </figcaption>
+                </figure>
+
+                <!-- Gallery Item 3: Dining -->
+                <figure class="relative group w-[300px] md:w-[400px] h-[500px] flex-shrink-0 overflow-hidden rounded-sm bg-stone-200">
+                    <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?q=80&w=800&auto=format&fit=crop" 
+                         alt="Elegant dining room with solid walnut table and black wishbone chairs" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    <figcaption class="absolute bottom-0 left-0 w-full p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                        <span class="block text-xs font-bold text-white/80 uppercase tracking-widest mb-1">Dining</span>
+                        <span class="block text-2xl font-serif text-white italic">Walnut Collection</span>
+                    </figcaption>
+                </figure>
+
+                <!-- Gallery Item 4: Lounge -->
+                <figure class="relative group w-[300px] md:w-[400px] h-[500px] flex-shrink-0 overflow-hidden rounded-sm bg-stone-200">
+                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=800&auto=format&fit=crop" 
+                         alt="Mid-century modern accent chair in cognac leather" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    <figcaption class="absolute bottom-0 left-0 w-full p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                        <span class="block text-xs font-bold text-white/80 uppercase tracking-widest mb-1">Lounge</span>
+                        <span class="block text-2xl font-serif text-white italic">Accent Chair 01</span>
+                    </figcaption>
+                </figure>
+
+                <!-- Gallery Item 5: Detail -->
+                <figure class="relative group w-[300px] md:w-[400px] h-[500px] flex-shrink-0 overflow-hidden rounded-sm bg-stone-200">
+                    <img src="https://images.unsplash.com/photo-1505693416388-509463c65955?q=80&w=800&auto=format&fit=crop" 
+                         alt="Close up of textured bouclé fabric on a white curved sofa" 
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    <figcaption class="absolute bottom-0 left-0 w-full p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                        <span class="block text-xs font-bold text-white/80 uppercase tracking-widest mb-1">Texture</span>
+                        <span class="block text-2xl font-serif text-white italic">Bouclé Weave</span>
+                    </figcaption>
+                </figure>
+
+                <!-- Duplicated Content for Loop -->
+                <figure class="relative group w-[300px] md:w-[400px] h-[500px] flex-shrink-0 overflow-hidden rounded-sm bg-stone-200">
+                    <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=800&auto=format&fit=crop" alt="Minimalist beige bedroom" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    <figcaption class="absolute bottom-0 left-0 w-full p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                        <span class="block text-xs font-bold text-white/80 uppercase tracking-widest mb-1">Bedroom</span>
+                        <span class="block text-2xl font-serif text-white italic">The Japandi Bed</span>
+                    </figcaption>
+                </figure>
+                 <figure class="relative group w-[300px] md:w-[400px] h-[500px] flex-shrink-0 overflow-hidden rounded-sm bg-stone-200">
+                    <img src="https://images.unsplash.com/photo-1567016432779-094069958ea5?q=80&w=800&auto=format&fit=crop" alt="Modern living room" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    <figcaption class="absolute bottom-0 left-0 w-full p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                        <span class="block text-xs font-bold text-white/80 uppercase tracking-widest mb-1">Living</span>
+                        <span class="block text-2xl font-serif text-white italic">Cloud Modular</span>
+                    </figcaption>
+                </figure>
+                <figure class="relative group w-[300px] md:w-[400px] h-[500px] flex-shrink-0 overflow-hidden rounded-sm bg-stone-200">
+                    <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?q=80&w=800&auto=format&fit=crop" alt="Elegant dining room" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    <figcaption class="absolute bottom-0 left-0 w-full p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                        <span class="block text-xs font-bold text-white/80 uppercase tracking-widest mb-1">Dining</span>
+                        <span class="block text-2xl font-serif text-white italic">Walnut Collection</span>
+                    </figcaption>
+                </figure>
+                 <figure class="relative group w-[300px] md:w-[400px] h-[500px] flex-shrink-0 overflow-hidden rounded-sm bg-stone-200">
+                    <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=800&auto=format&fit=crop" alt="Mid-century modern accent chair" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    <figcaption class="absolute bottom-0 left-0 w-full p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                        <span class="block text-xs font-bold text-white/80 uppercase tracking-widest mb-1">Lounge</span>
+                        <span class="block text-2xl font-serif text-white italic">Accent Chair 01</span>
+                    </figcaption>
+                </figure>
+                 <figure class="relative group w-[300px] md:w-[400px] h-[500px] flex-shrink-0 overflow-hidden rounded-sm bg-stone-200">
+                    <img src="https://images.unsplash.com/photo-1505693416388-509463c65955?q=80&w=800&auto=format&fit=crop" alt="Close up of textured fabric" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    <figcaption class="absolute bottom-0 left-0 w-full p-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                        <span class="block text-xs font-bold text-white/80 uppercase tracking-widest mb-1">Texture</span>
+                        <span class="block text-2xl font-serif text-white italic">Bouclé Weave</span>
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-LengendArt-dark text-stone-400 py-24 relative overflow-hidden" id="footer">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        <div class="max-w-[1800px] mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
+                <div class="space-y-8">
+                    <span class="text-white font-sans font-bold tracking-[0.2em] text-2xl block">
+                        LengendArt
+                    </span>
+                    <p class="text-lg leading-relaxed text-stone-500">
+                        Elevating everyday rituals through thoughtful design and impeccable craftsmanship.
+                    </p>
+                </div>
+                
+                <div>
+                    <h5 class="text-white font-bold mb-8 uppercase tracking-widest text-sm">Shop</h5>
+                    <ul class="space-y-4 text-base">
+                        <li><a href="#" class="hover:text-white transition-colors">Living Room</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Dining Room</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Bedroom</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Workspace</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Accessories</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="text-white font-bold mb-8 uppercase tracking-widest text-sm">Company</h5>
+                    <ul class="space-y-4 text-base">
+                        <li><a href="#" class="hover:text-white transition-colors">Our Story</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Sustainability</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Press</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h5 class="text-white font-bold mb-8 uppercase tracking-widest text-sm">Newsletter</h5>
+                    <p class="mb-6 text-sm text-stone-500">Join our community for design inspiration and early access.</p>
+                    <div class="flex border-b border-stone-700 pb-2">
+                        <input type="email" placeholder="Email address" class="bg-transparent w-full outline-none text-white placeholder-stone-600">
+                        <button class="text-white hover:text-LengendArt-accent transition-colors uppercase font-bold text-xs tracking-widest">Join</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-24 pt-8 border-t border-stone-800 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-stone-600">
+                <p>&copy; 2026 LengendArt Interiors. All rights reserved.</p>
+                <div class="flex gap-8">
+                    <a href="#" class="hover:text-stone-400">Privacy Policy</a>
+                    <a href="#" class="hover:text-stone-400">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // --- 1. Text Animation Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const charElements = document.querySelectorAll('.char-reveal span[data-text]');
+            
+            charElements.forEach((el, lineIndex) => {
+                const text = el.getAttribute('data-text').replace(/_/g, ' ');
+                el.innerHTML = '';
+                text.split('').forEach((char, index) => {
+                    const span = document.createElement('span');
+                    span.textContent = char === ' ' ? '\u00A0' : char;
+                    span.style.transitionDelay = `${(lineIndex * 200) + (index * 30)}ms`;
+                    el.appendChild(span);
+                });
+            });
+
+            setTimeout(() => {
+                document.querySelector('.char-reveal').classList.add('active');
+            }, 100);
+        });
+
+        // --- 2. Intersection Observer for Scroll Reveals ---
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal-element').forEach(el => observer.observe(el));
+
+        // --- 3. Parallax Effect ---
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const parallaxBg = document.getElementById('parallax-bg');
+            if(parallaxBg) {
+                parallaxBg.style.transform = `translateY(${scrolled * 0.4}px)`;
+            }
+        });
+
+        // --- 4. Flashlight Effect on Cards ---
+        const cards = document.querySelectorAll('.flashlight-card');
+        
+        document.addEventListener('mousemove', (e) => {
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                card.style.setProperty('--x', `${x}px`);
+                card.style.setProperty('--y', `${y}px`);
+                
+                if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+                    card.querySelector('.overlay-light').style.opacity = '1';
+                    card.querySelector('.border-light').style.opacity = '1';
+                } else {
+                    card.querySelector('.overlay-light').style.opacity = '0';
+                    card.querySelector('.border-light').style.opacity = '0';
+                }
+            });
+        });
+
+        // --- 5. Card Rotation Logic ---
+        const cardsContainer = document.getElementById('cards-container');
+        const cardElements = Array.from(document.querySelectorAll('.testimonial-card'));
+        let currentIndex = 0;
+
+        function updateCards() {
+            cardElements.forEach((card, index) => {
+                let position = (index - currentIndex + cardElements.length) % cardElements.length;
+                
+                if (position === 0) {
+                    card.style.zIndex = '3';
+                    card.style.transform = 'translateY(0) scale(1)';
+                    card.style.opacity = '1';
+                } else if (position === 1) {
+                    card.style.zIndex = '2';
+                    card.style.transform = 'translateY(20px) scale(0.95)';
+                    card.style.opacity = '0.8';
+                } else {
+                    card.style.zIndex = '1';
+                    card.style.transform = 'translateY(40px) scale(0.9)';
+                    card.style.opacity = '0.6';
+                }
+            });
+        }
+
+        document.getElementById('next-card').addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % cardElements.length;
+            updateCards();
+        });
+
+        document.getElementById('prev-card').addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + cardElements.length) % cardElements.length;
+            updateCards();
+        });
+
+    </script>
+</body>
+</html>
